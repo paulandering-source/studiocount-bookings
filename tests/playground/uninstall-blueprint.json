@@ -1,0 +1,38 @@
+{
+  "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+  "preferredVersions": {
+    "php": "7.4",
+    "wp": "latest"
+  },
+  "login": false,
+  "siteOptions": {
+    "blogname": "StudioCount Bookings uninstall acceptance"
+  },
+  "steps": [
+    {
+      "step": "activatePlugin",
+      "pluginName": "StudioCount Bookings",
+      "pluginPath": "studiocount-bookings/studiocount-bookings.php"
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp option update studiocount_bookings_options '{\"studio_slug\":\"studioone\",\"default_view\":\"both\"}' --format=json"
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp option update studiocount_unrelated_sentinel preserved"
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp plugin deactivate studiocount-bookings"
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp plugin uninstall studiocount-bookings --skip-delete"
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp eval 'if ( false !== get_option( \"studiocount_bookings_options\", false ) ) { WP_CLI::error( \"Plugin settings survived uninstall.\" ); } if ( \"preserved\" !== get_option( \"studiocount_unrelated_sentinel\" ) ) { WP_CLI::error( \"Unrelated data changed during uninstall.\" ); } echo \"uninstall-cleanup=pass\\n\";'"
+    }
+  ]
+}

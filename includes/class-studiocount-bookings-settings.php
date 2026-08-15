@@ -67,11 +67,11 @@ final class StudioCount_Bookings_Settings {
 	 * @return array{studio_slug:string,default_view:string}
 	 */
 	public static function sanitize( $input ) {
-		$input    = is_array( $input ) ? $input : array();
-		$current  = StudioCount_Bookings_Renderer::get_options();
-		$raw      = trim( (string) ( $input['studio_slug'] ?? '' ) );
-		$studio   = StudioCount_Bookings_Renderer::normalize_studio( $raw );
-		$view     = StudioCount_Bookings_Renderer::normalize_view( $input['default_view'] ?? 'both' );
+		$input   = is_array( $input ) ? $input : array();
+		$current = StudioCount_Bookings_Renderer::get_options();
+		$raw     = trim( (string) ( $input['studio_slug'] ?? '' ) );
+		$studio  = StudioCount_Bookings_Renderer::normalize_studio( $raw );
+		$view    = StudioCount_Bookings_Renderer::normalize_view( $input['default_view'] ?? 'both' );
 
 		if ( '' !== $raw && '' === $studio ) {
 			add_settings_error(

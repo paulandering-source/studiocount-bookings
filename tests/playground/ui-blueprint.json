@@ -1,0 +1,22 @@
+{
+  "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+  "preferredVersions": {
+    "php": "7.4",
+    "wp": "latest"
+  },
+  "landingPage": "/wp-admin/tools.php?page=plugin-check",
+  "login": true,
+  "siteOptions": {
+    "blogname": "StudioCount Bookings acceptance"
+  },
+  "plugins": [
+    "plugin-check"
+  ],
+  "steps": [
+    {
+      "step": "activatePlugin",
+      "pluginName": "StudioCount Bookings",
+      "pluginPath": "studiocount-bookings/studiocount-bookings.php"
+    }
+  ]
+}

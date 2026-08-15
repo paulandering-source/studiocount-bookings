@@ -1,0 +1,26 @@
+{
+  "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+  "preferredVersions": {
+    "php": "7.4",
+    "wp": "latest"
+  },
+  "login": false,
+  "siteOptions": {
+    "blogname": "StudioCount Bookings public acceptance"
+  },
+  "steps": [
+    {
+      "step": "activatePlugin",
+      "pluginName": "StudioCount Bookings",
+      "pluginPath": "studiocount-bookings/studiocount-bookings.php"
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp option update studiocount_bookings_options '{\"studio_slug\":\"studioone\",\"default_view\":\"both\"}' --format=json"
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp post create --post_type=page --post_status=publish --post_name=studiocount-bookings-public --post_title='StudioCount Bookings Public' --post_content='<!-- wp:heading --><h2 class=\"wp-block-heading\">Classes</h2><!-- /wp:heading --><!-- wp:studiocount/bookings {\"studio\":\"studioone\",\"view\":\"classes\"} /--><!-- wp:heading --><h2 class=\"wp-block-heading\">Products</h2><!-- /wp:heading --><!-- wp:studiocount/bookings {\"studio\":\"studioone\",\"view\":\"products\"} /--><!-- wp:heading --><h2 class=\"wp-block-heading\">Classes and products</h2><!-- /wp:heading --><!-- wp:studiocount/bookings {\"studio\":\"studioone\",\"view\":\"both\"} /--><!-- wp:heading --><h2 class=\"wp-block-heading\">Shortcode</h2><!-- /wp:heading --><!-- wp:shortcode -->[studiocount_bookings studio=\"studioone\" view=\"both\"]<!-- /wp:shortcode -->'"
+    }
+  ]
+}

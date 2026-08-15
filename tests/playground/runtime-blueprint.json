@@ -1,0 +1,47 @@
+{
+  "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+  "preferredVersions": {
+    "php": "7.4",
+    "wp": "latest"
+  },
+  "landingPage": "/wp-admin/plugins.php",
+  "login": true,
+  "siteOptions": {
+    "blogname": "StudioCount Bookings acceptance"
+  },
+  "steps": [
+    {
+      "step": "wp-cli",
+      "command": "wp eval 'if ( 0 !== strpos( PHP_VERSION, \"7.4.\" ) ) { WP_CLI::error( \"Expected PHP 7.4, got \" . PHP_VERSION ); } echo \"php=\" . PHP_VERSION . \"\\n\"; echo \"wordpress=\" . get_bloginfo( \"version\" ) . \"\\n\";'"
+    },
+    {
+      "step": "activatePlugin",
+      "pluginName": "StudioCount Bookings",
+      "pluginPath": "studiocount-bookings/studiocount-bookings.php"
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp plugin status studiocount-bookings"
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp eval 'echo wp_json_encode( StudioCount_Bookings_Renderer::get_options() ), \"\\n\";'"
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp eval 'echo shortcode_exists( \"studiocount_bookings\" ) ? \"shortcode=registered\\n\" : \"shortcode=missing\\n\"; echo WP_Block_Type_Registry::get_instance()->is_registered( \"studiocount/bookings\" ) ? \"block=registered\\n\" : \"block=missing\\n\";'"
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp option update studiocount_bookings_options '{\"studio_slug\":\"studioone\",\"default_view\":\"both\"}' --format=json"
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp eval '$html = do_shortcode( \"[studiocount_bookings]\" ); if ( false === strpos( $html, \"https://www.studiocount.com/embed/studioone?view=both\" ) || false === strpos( $html, \"data-studiocount-instance\" ) ) { WP_CLI::error( \"Rendered shortcode contract mismatch.\" ); } echo \"shortcode-render=pass\\n\";'"
+    },
+    {
+      "step": "wp-cli",
+      "command": "wp eval '$html = render_block( array( \"blockName\" => \"studiocount/bookings\", \"attrs\" => array( \"studio\" => \"studioone\", \"view\" => \"classes\" ) ) ); if ( false === strpos( $html, \"https://www.studiocount.com/embed/studioone?view=classes\" ) ) { WP_CLI::error( \"Rendered block contract mismatch.\" ); } echo \"block-render=pass\\n\";'"
+    }
+  ]
+}

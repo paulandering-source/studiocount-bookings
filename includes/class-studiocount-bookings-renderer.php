@@ -177,8 +177,10 @@ final class StudioCount_Bookings_Renderer {
 		if ( '' !== $raw_studio && '' === $studio ) {
 			return self::configuration_message( $is_block );
 		}
-		$studio  = $studio ?: $options['studio_slug'];
-		$view    = '' !== trim( (string) ( $attributes['view'] ?? '' ) )
+		if ( '' === $studio ) {
+			$studio = $options['studio_slug'];
+		}
+		$view = '' !== trim( (string) ( $attributes['view'] ?? '' ) )
 			? self::normalize_view( $attributes['view'] )
 			: $options['default_view'];
 
