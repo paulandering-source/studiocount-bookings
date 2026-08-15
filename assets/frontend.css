@@ -1,0 +1,69 @@
+.studiocount-bookings {
+	box-sizing: border-box;
+	position: relative;
+	width: 100%;
+	max-width: 1200px;
+	margin: 1.5rem auto;
+	color: #111827;
+}
+
+.studiocount-bookings.alignwide {
+	max-width: 1200px;
+}
+
+.studiocount-bookings.alignfull {
+	max-width: none;
+}
+
+.studiocount-bookings__frame {
+	display: block;
+	width: 100%;
+	min-height: 420px;
+	border: 0;
+	background: #f8fafc;
+}
+
+.studiocount-bookings__status {
+	box-sizing: border-box;
+	position: absolute;
+	z-index: 1;
+	top: 1rem;
+	left: 50%;
+	max-width: calc(100% - 2rem);
+	transform: translateX(-50%);
+	border: 1px solid #e2e8f0;
+	border-radius: 8px;
+	background: #ffffff;
+	padding: 0.65rem 0.9rem;
+	box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+	font: 600 0.875rem/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+	text-align: center;
+}
+
+.studiocount-bookings--ready .studiocount-bookings__status {
+	display: none;
+}
+
+.studiocount-bookings--unavailable {
+	max-width: 760px;
+	border: 1px solid #e2e8f0;
+	border-radius: 10px;
+	background: #f8fafc;
+	padding: 1.25rem;
+	font: 600 1rem/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+	text-align: center;
+}
+
+.studiocount-bookings--unavailable p {
+	margin: 0;
+}
+
+@media (max-width: 600px) {
+	.studiocount-bookings {
+		margin: 1rem auto;
+	}
+
+	.studiocount-bookings__frame {
+		min-height: 520px;
+	}
+}

@@ -1,0 +1,84 @@
+.studiocount-bookings-admin {
+	max-width: 860px;
+	color: #172033;
+}
+
+.studiocount-bookings-admin__header {
+	margin: 2rem 0 1.25rem;
+}
+
+.studiocount-bookings-admin__header h1 {
+	margin: 0.25rem 0 0.5rem;
+	font-size: 2rem;
+	line-height: 1.15;
+}
+
+.studiocount-bookings-admin__header > p:last-child {
+	margin: 0;
+	color: #526077;
+	font-size: 1rem;
+}
+
+.studiocount-bookings-admin__eyebrow {
+	margin: 0;
+	color: #c80664;
+	font-size: 0.75rem;
+	font-weight: 700;
+	letter-spacing: 0.15em;
+	text-transform: uppercase;
+}
+
+.studiocount-bookings-admin__card {
+	margin: 0 0 1rem;
+	border: 1px solid #d8dee9;
+	border-radius: 10px;
+	background: #ffffff;
+	padding: 1.5rem;
+	box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+}
+
+.studiocount-bookings-admin__field {
+	margin-bottom: 1.5rem;
+}
+
+.studiocount-bookings-admin__field label {
+	display: block;
+	margin-bottom: 0.5rem;
+	font-weight: 700;
+}
+
+.studiocount-bookings-admin__field input,
+.studiocount-bookings-admin__field select {
+	width: 100%;
+	max-width: 620px;
+}
+
+.studiocount-bookings-admin__actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.65rem;
+}
+
+.studiocount-bookings-admin__result {
+	min-height: 1.5rem;
+	margin: 1rem 0 0;
+	font-weight: 600;
+}
+
+.studiocount-bookings-admin__result.is-success {
+	color: #087a53;
+}
+
+.studiocount-bookings-admin__result.is-error {
+	color: #b42318;
+}
+
+.studiocount-bookings-admin__service h2 {
+	margin-top: 0;
+}
+
+.studiocount-bookings-admin__service p {
+	max-width: 70ch;
+	line-height: 1.6;
+}

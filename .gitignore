@@ -1,0 +1,5 @@
+.DS_Store
+release/
+vendor/
+node_modules/
+.phpunit.result.cache

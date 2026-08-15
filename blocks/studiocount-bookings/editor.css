@@ -1,0 +1,43 @@
+.studiocount-bookings-editor {
+	box-sizing: border-box;
+	border: 1px solid #d8dee9;
+	border-radius: 10px;
+	background: #ffffff;
+	padding: 1.5rem;
+	box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+	color: #172033;
+}
+
+.studiocount-bookings-editor__eyebrow {
+	margin: 0;
+	color: #c80664;
+	font-size: 0.75rem;
+	font-weight: 700;
+	letter-spacing: 0.15em;
+	text-transform: uppercase;
+}
+
+.studiocount-bookings-editor h3 {
+	margin: 0.35rem 0 1rem;
+	font-size: 1.45rem;
+}
+
+.studiocount-bookings-editor__preview {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	gap: 0.4rem 1rem;
+	border-radius: 8px;
+	background: #f8fafc;
+	padding: 1rem;
+}
+
+.studiocount-bookings-editor__preview span {
+	color: #c80664;
+	font-weight: 700;
+}
+
+.studiocount-bookings-editor__preview p {
+	grid-column: 1 / -1;
+	margin: 0.35rem 0 0;
+	color: #526077;
+}

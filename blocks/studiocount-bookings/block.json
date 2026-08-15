@@ -1,0 +1,30 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "studiocount/bookings",
+  "version": "1.0.0",
+  "title": "StudioCount Bookings",
+  "category": "widgets",
+  "icon": "calendar-alt",
+  "description": "Display StudioCount classes and products.",
+  "keywords": ["classes", "booking", "fitness"],
+  "textdomain": "studiocount-bookings",
+  "attributes": {
+    "studio": {
+      "type": "string",
+      "default": ""
+    },
+    "view": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "supports": {
+    "align": ["wide", "full"],
+    "html": false,
+    "multiple": true
+  },
+  "editorScript": "studiocount-bookings-block-editor",
+  "editorStyle": "studiocount-bookings-block-editor",
+  "style": "studiocount-bookings-frontend"
+}
