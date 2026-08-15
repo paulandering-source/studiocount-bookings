@@ -140,6 +140,9 @@ assert_true( false !== strpos( $url, 'instance_id=studiocount-bookings-1' ), 'bi
 $GLOBALS['scb_options'] = array( 'studio_slug' => 'studioone', 'default_view' => 'both' );
 $first = StudioCount_Bookings_Renderer::render_shortcode();
 $second = StudioCount_Bookings_Renderer::render_shortcode( array( 'view' => 'products' ) );
+assert_true( false !== strpos( $first, 'Loading bookings' ), 'uses neutral visitor loading copy' );
+assert_true( false === strpos( $first, 'Loading StudioCount bookings' ), 'does not brand the visitor loading state' );
+assert_true( false !== strpos( $first, 'title="Classes and products"' ), 'uses a neutral frame title' );
 assert_true( false !== strpos( $first, 'sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"' ), 'renders bounded iframe sandbox' );
 assert_true( false !== strpos( $first, 'referrerpolicy="strict-origin"' ), 'sends exact parent referrer origin' );
 assert_true( false !== strpos( $first, 'view=both' ), 'uses saved default view' );
