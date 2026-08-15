@@ -82,8 +82,8 @@ No. Class availability refresh is manual or follows a relevant visitor action, s
 == Screenshots ==
 
 1. Configure the public studio booking page and default display.
-2. Add StudioCount Bookings in the block editor and choose what to show.
-3. Display responsive StudioCount classes and products on a WordPress page.
+2. Display responsive StudioCount classes on a WordPress page.
+3. Display StudioCount products alongside the studio's classes.
 
 == Changelog ==
 
