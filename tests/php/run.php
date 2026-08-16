@@ -192,6 +192,12 @@ assert_true( false !== strpos( $settings_source, 'Check booking page' ), 'uses a
 assert_true( false !== strpos( $settings_source, 'View booking page' ), 'links to the full public booking page' );
 assert_true( false !== strpos( $settings_source, 'admin_post_studiocount_bookings_connect' ), 'registers the protected WordPress callback' );
 assert_true( false !== strpos( $settings_source, 'wp_verify_nonce' ), 'binds the callback to the initiating WordPress administrator' );
+assert_true( false !== strpos( $settings_source, 'admin_post_studiocount_bookings_create_page' ), 'registers the protected booking-page creator' );
+assert_true( false !== strpos( $settings_source, "current_user_can( 'manage_options' )" ), 'requires WordPress administrator authority for page creation' );
+assert_true( false !== strpos( $settings_source, "check_admin_referer( 'studiocount_bookings_create_page' )" ), 'requires an exact page-creation nonce' );
+assert_true( false !== strpos( $settings_source, "'post_status'  => 'draft'" ), 'creates an editable draft rather than publishing automatically' );
+assert_true( false !== strpos( $settings_source, '<!-- wp:studiocount/bookings /-->' ), 'creates the page with the local StudioCount block' );
+assert_true( false !== strpos( $settings_source, 'Edit booking page' ), 'reuses the existing plugin-created page instead of duplicating it' );
 
 $block = json_decode( file_get_contents( dirname( __DIR__, 2 ) . '/blocks/studiocount-bookings/block.json' ), true );
 assert_same( 'studiocount/bookings', $block['name'] ?? '', 'registers exact block namespace' );

@@ -24,6 +24,7 @@ final class StudioCount_Bookings_Settings {
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_assets' ) );
 		add_action( 'wp_ajax_studiocount_bookings_check_connection', array( __CLASS__, 'check_connection' ) );
 		add_action( 'admin_post_studiocount_bookings_connect', array( __CLASS__, 'complete_connection' ) );
+		add_action( 'admin_post_studiocount_bookings_create_page', array( __CLASS__, 'create_booking_page' ) );
 	}
 
 	/**
@@ -153,6 +154,83 @@ final class StudioCount_Bookings_Settings {
 	}
 
 	/**
+	 * Returns the one existing plugin-created booking page when it is usable.
+	 *
+	 * @return int
+	 */
+	private static function booking_page_id() {
+		$page_id = absint( get_option( 'studiocount_bookings_page_id', 0 ) );
+		if ( 0 === $page_id ) {
+			return 0;
+		}
+
+		$page = get_post( $page_id );
+		if ( ! $page || 'page' !== $page->post_type || 'trash' === $page->post_status ) {
+			return 0;
+		}
+
+		return $page_id;
+	}
+
+	/**
+	 * Creates one normal editable WordPress page containing the booking block.
+	 *
+	 * @return void
+	 */
+	public static function create_booking_page() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die(
+				esc_html__( 'You are not allowed to create this page.', 'studiocount-bookings' ),
+				'',
+				array( 'response' => 403 )
+			);
+		}
+		check_admin_referer( 'studiocount_bookings_create_page' );
+
+		$options = StudioCount_Bookings_Renderer::get_options();
+		if ( '' === $options['studio_slug'] || '' === $options['connection_key'] ) {
+			wp_die(
+				esc_html__( 'Connect this website to StudioCount before creating a booking page.', 'studiocount-bookings' ),
+				'',
+				array( 'response' => 400 )
+			);
+		}
+
+		$page_id = self::booking_page_id();
+		if ( 0 === $page_id ) {
+			$page_id = wp_insert_post(
+				array(
+					'post_title'   => __( 'Book classes', 'studiocount-bookings' ),
+					'post_content' => '<!-- wp:studiocount/bookings /-->',
+					'post_status'  => 'draft',
+					'post_type'    => 'page',
+				),
+				true
+			);
+			if ( is_wp_error( $page_id ) ) {
+				wp_die(
+					esc_html__( 'The booking page could not be created.', 'studiocount-bookings' ),
+					'',
+					array( 'response' => 500 )
+				);
+			}
+			update_option( 'studiocount_bookings_page_id', (int) $page_id, false );
+		}
+
+		$edit_url = get_edit_post_link( $page_id, 'raw' );
+		if ( ! is_string( $edit_url ) || '' === $edit_url ) {
+			wp_die(
+				esc_html__( 'The booking page editor could not be opened.', 'studiocount-bookings' ),
+				'',
+				array( 'response' => 500 )
+			);
+		}
+
+		wp_safe_redirect( $edit_url );
+		exit;
+	}
+
+	/**
 	 * Loads local settings assets only on this page.
 	 *
 	 * @param string $hook_suffix Current admin hook.
@@ -251,6 +329,7 @@ final class StudioCount_Bookings_Settings {
 
 		$options     = StudioCount_Bookings_Renderer::get_options();
 		$connected   = '' !== $options['studio_slug'] && '' !== $options['connection_key'];
+		$page_id     = self::booking_page_id();
 		$booking_url = $connected
 			? StudioCount_Bookings_Renderer::service_origin() . '/book/' . rawurlencode( $options['studio_slug'] )
 			: '';
@@ -297,6 +376,23 @@ final class StudioCount_Bookings_Settings {
 				</div>
 				<p id="studiocount-bookings-check-result" class="studiocount-bookings-admin__result" role="status" aria-live="polite"></p>
 			</form>
+
+			<section class="studiocount-bookings-admin__card" aria-labelledby="studiocount-booking-page-heading">
+				<h2 id="studiocount-booking-page-heading"><?php esc_html_e( 'Booking page', 'studiocount-bookings' ); ?></h2>
+				<?php if ( 0 !== $page_id ) : ?>
+					<p><?php esc_html_e( 'Your WordPress booking page is ready to edit.', 'studiocount-bookings' ); ?></p>
+					<a class="button button-primary" href="<?php echo esc_url( get_edit_post_link( $page_id, 'raw' ) ); ?>"><?php esc_html_e( 'Edit booking page', 'studiocount-bookings' ); ?></a>
+				<?php elseif ( $connected ) : ?>
+					<p><?php esc_html_e( 'Create an editable draft page with the StudioCount booking block already added.', 'studiocount-bookings' ); ?></p>
+					<form action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post">
+						<input type="hidden" name="action" value="studiocount_bookings_create_page">
+						<?php wp_nonce_field( 'studiocount_bookings_create_page' ); ?>
+						<?php submit_button( __( 'Create booking page', 'studiocount-bookings' ), 'primary', 'submit', false ); ?>
+					</form>
+				<?php else : ?>
+					<p><?php esc_html_e( 'Connect this website to StudioCount before creating a booking page.', 'studiocount-bookings' ); ?></p>
+				<?php endif; ?>
+			</section>
 
 			<section class="studiocount-bookings-admin__card studiocount-bookings-admin__service" aria-labelledby="studiocount-service-heading">
 				<h2 id="studiocount-service-heading"><?php esc_html_e( 'StudioCount service', 'studiocount-bookings' ); ?></h2>

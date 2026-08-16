@@ -3,7 +3,7 @@ Tags: class booking, fitness, studio, scheduling, memberships
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.5
+Stable tag: 1.0.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -44,10 +44,10 @@ Stripe Services Agreement: https://stripe.com/legal/ssa
 == Installation ==
 
 1. Install and activate StudioCount Bookings.
-2. Open **Settings > StudioCount Bookings**.
+2. Open **StudioCount Bookings** in the WordPress admin menu.
 3. Choose **Connect to StudioCount**, sign in to Studio Portal and confirm the exact studio and WordPress website.
 4. Choose the default display and save the settings.
-5. Add the **StudioCount Bookings** block to a page, or use `[studiocount_bookings]`.
+5. Choose **Create booking page**, add the block to another page, or use `[studiocount_bookings]`.
 
 The shortcode accepts an optional `view` attribute:
 
@@ -89,6 +89,11 @@ No. Visitors can reload the WordPress page, and a retry button appears only if b
 
 == Changelog ==
 
+= 1.0.6 =
+
+* Add one-click creation of an editable draft booking page without forced promotional copy.
+* Reuse the existing plugin-created page instead of creating duplicates.
+
 = 1.0.5 =
 
 * Add an authenticated, revocable Studio Portal connection bound to the exact WordPress domain.
@@ -119,6 +124,10 @@ No. Visitors can reload the WordPress page, and a retry button appears only if b
 * Responsive isolated embed with exact-origin resizing and Checkout navigation.
 
 == Upgrade Notice ==
+
+= 1.0.6 =
+
+Adds an optional one-click booking-page setup from the plugin settings screen.
 
 = 1.0.5 =
 
