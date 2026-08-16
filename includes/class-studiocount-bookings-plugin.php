@@ -25,7 +25,30 @@ final class StudioCount_Bookings_Plugin {
 
 		if ( is_admin() ) {
 			StudioCount_Bookings_Settings::init();
+			add_filter(
+				'plugin_action_links_' . plugin_basename( STUDIOCOUNT_BOOKINGS_FILE ),
+				array( __CLASS__, 'plugin_action_links' )
+			);
 		}
+	}
+
+	/**
+	 * Adds a direct settings link beside the plugin activation controls.
+	 *
+	 * @param array $links Existing plugin action links.
+	 * @return array
+	 */
+	public static function plugin_action_links( $links ) {
+		$links = is_array( $links ) ? $links : array();
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return $links;
+		}
+
+		array_unshift(
+			$links,
+			'<a href="' . esc_url( admin_url( 'options-general.php?page=studiocount-bookings' ) ) . '">' . esc_html__( 'Settings', 'studiocount-bookings' ) . '</a>'
+		);
+		return $links;
 	}
 
 	/**

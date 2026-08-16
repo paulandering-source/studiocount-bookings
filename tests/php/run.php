@@ -167,6 +167,7 @@ assert_true( false !== strpos( $admin_missing, 'StudioCount Bookings settings' )
 
 $frontend_js = file_get_contents( dirname( __DIR__, 2 ) . '/assets/frontend.js' );
 $frontend_css = file_get_contents( dirname( __DIR__, 2 ) . '/assets/frontend.css' );
+$plugin_source = file_get_contents( dirname( __DIR__, 2 ) . '/includes/class-studiocount-bookings-plugin.php' );
 assert_true( false !== strpos( $frontend_js, "serviceOrigin !== event.origin" ), 'requires exact message origin' );
 assert_true( false !== strpos( $frontend_js, 'frame.contentWindow === event.source' ), 'requires exact message window' );
 assert_true( false !== strpos( $frontend_js, "'/checkout-return' === destination.pathname" ), 'allows exact StudioCount return path' );
@@ -174,6 +175,8 @@ assert_true( false !== strpos( $frontend_js, "0 === destination.pathname.indexOf
 assert_true( false === strpos( $frontend_js, 'setInterval' ), 'contains no automatic refresh loop' );
 assert_true( false !== strpos( $frontend_css, 'width: min(1200px, calc(100vw - 2rem));' ), 'uses the wide booking canvas outside narrow theme columns' );
 assert_true( false !== strpos( $frontend_css, 'transform: translateX(-50%);' ), 'centres the wide canvas on the page viewport' );
+assert_true( false !== strpos( $plugin_source, "'plugin_action_links_'" ), 'adds a discoverable settings link on the Plugins page' );
+assert_true( false !== strpos( $plugin_source, "options-general.php?page=studiocount-bookings" ), 'links to the bounded StudioCount settings screen' );
 
 $block = json_decode( file_get_contents( dirname( __DIR__, 2 ) . '/blocks/studiocount-bookings/block.json' ), true );
 assert_same( 'studiocount/bookings', $block['name'] ?? '', 'registers exact block namespace' );

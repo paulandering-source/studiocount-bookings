@@ -3,7 +3,7 @@ Tags: class booking, fitness, studio, scheduling, memberships
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -87,6 +87,10 @@ No. Class availability refresh is manual or follows a relevant visitor action, s
 
 == Changelog ==
 
+= 1.0.2 =
+
+* Add a direct Settings link on the WordPress Plugins screen.
+
 = 1.0.1 =
 
 * Use a wider responsive booking canvas even inside narrow theme content columns.
@@ -99,6 +103,10 @@ No. Class availability refresh is manual or follows a relevant visitor action, s
 * Responsive isolated embed with exact-origin resizing and Checkout navigation.
 
 == Upgrade Notice ==
+
+= 1.0.2 =
+
+Makes the existing StudioCount Bookings settings screen easier to find.
 
 = 1.0.1 =
 
