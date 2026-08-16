@@ -173,7 +173,9 @@ assert_true( false !== strpos( $frontend_js, 'frame.contentWindow === event.sour
 assert_true( false !== strpos( $frontend_js, "'/checkout-return' === destination.pathname" ), 'allows exact StudioCount return path' );
 assert_true( false !== strpos( $frontend_js, "0 === destination.pathname.indexOf( '/c/pay/' )" ), 'allows exact Stripe Checkout path' );
 assert_true( false === strpos( $frontend_js, 'setInterval' ), 'contains no automatic refresh loop' );
-assert_true( false !== strpos( $frontend_css, 'width: min(1200px, calc(100vw - 2rem));' ), 'uses the wide booking canvas outside narrow theme columns' );
+assert_true( false !== strpos( $frontend_css, 'width: min(1200px, calc(100vw - 2rem)) !important;' ), 'overrides narrow theme constraints with the wide booking canvas' );
+assert_true( false !== strpos( $frontend_css, 'max-width: none !important;' ), 'prevents a theme maximum width from narrowing the booking canvas' );
+assert_true( false !== strpos( $frontend_css, 'margin-left: 0 !important;' ), 'prevents theme auto margins from shifting the booking canvas' );
 assert_true( false !== strpos( $frontend_css, 'transform: translateX(-50%);' ), 'centres the wide canvas on the page viewport' );
 assert_true( false !== strpos( $plugin_source, "'plugin_action_links_'" ), 'adds a discoverable settings link on the Plugins page' );
 assert_true( false !== strpos( $plugin_source, "admin.php?page=studiocount-bookings" ), 'links to the visible StudioCount settings screen' );

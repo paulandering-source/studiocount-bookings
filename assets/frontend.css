@@ -2,19 +2,21 @@
 	box-sizing: border-box;
 	position: relative;
 	left: 50%;
-	width: min(1200px, calc(100vw - 2rem));
-	max-width: none;
+	width: min(1200px, calc(100vw - 2rem)) !important;
+	max-width: none !important;
 	margin: 1.5rem 0;
+	margin-right: 0 !important;
+	margin-left: 0 !important;
 	transform: translateX(-50%);
 	color: #111827;
 }
 
 .studiocount-bookings.alignwide {
-	width: min(1200px, calc(100vw - 2rem));
+	width: min(1200px, calc(100vw - 2rem)) !important;
 }
 
 .studiocount-bookings.alignfull {
-	width: calc(100vw - 2rem);
+	width: calc(100vw - 2rem) !important;
 }
 
 .studiocount-bookings__frame {
@@ -62,13 +64,13 @@
 
 @media (max-width: 600px) {
 	.studiocount-bookings {
-		width: calc(100vw - 1rem);
+		width: calc(100vw - 1rem) !important;
 		margin: 1rem 0;
 	}
 
 	.studiocount-bookings.alignwide,
 	.studiocount-bookings.alignfull {
-		width: calc(100vw - 1rem);
+		width: calc(100vw - 1rem) !important;
 	}
 
 	.studiocount-bookings__frame {
