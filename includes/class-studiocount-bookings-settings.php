@@ -31,12 +31,14 @@ final class StudioCount_Bookings_Settings {
 	 * @return void
 	 */
 	public static function add_page() {
-		add_options_page(
+		add_menu_page(
 			__( 'StudioCount Bookings', 'studiocount-bookings' ),
 			__( 'StudioCount Bookings', 'studiocount-bookings' ),
 			'manage_options',
 			'studiocount-bookings',
-			array( __CLASS__, 'render_page' )
+			array( __CLASS__, 'render_page' ),
+			'dashicons-calendar-alt',
+			58
 		);
 	}
 
@@ -95,7 +97,7 @@ final class StudioCount_Bookings_Settings {
 	 * @return void
 	 */
 	public static function enqueue_assets( $hook_suffix ) {
-		if ( 'settings_page_studiocount-bookings' !== $hook_suffix ) {
+		if ( 'toplevel_page_studiocount-bookings' !== $hook_suffix ) {
 			return;
 		}
 

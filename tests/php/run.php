@@ -176,7 +176,10 @@ assert_true( false === strpos( $frontend_js, 'setInterval' ), 'contains no autom
 assert_true( false !== strpos( $frontend_css, 'width: min(1200px, calc(100vw - 2rem));' ), 'uses the wide booking canvas outside narrow theme columns' );
 assert_true( false !== strpos( $frontend_css, 'transform: translateX(-50%);' ), 'centres the wide canvas on the page viewport' );
 assert_true( false !== strpos( $plugin_source, "'plugin_action_links_'" ), 'adds a discoverable settings link on the Plugins page' );
-assert_true( false !== strpos( $plugin_source, "options-general.php?page=studiocount-bookings" ), 'links to the bounded StudioCount settings screen' );
+assert_true( false !== strpos( $plugin_source, "admin.php?page=studiocount-bookings" ), 'links to the visible StudioCount settings screen' );
+$settings_source = file_get_contents( dirname( __DIR__, 2 ) . '/includes/class-studiocount-bookings-settings.php' );
+assert_true( false !== strpos( $settings_source, 'add_menu_page(' ), 'registers a visible top-level WordPress admin menu' );
+assert_true( false !== strpos( $settings_source, "'dashicons-calendar-alt'" ), 'uses a recognizable booking calendar menu icon' );
 
 $block = json_decode( file_get_contents( dirname( __DIR__, 2 ) . '/blocks/studiocount-bookings/block.json' ), true );
 assert_same( 'studiocount/bookings', $block['name'] ?? '', 'registers exact block namespace' );

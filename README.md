@@ -54,7 +54,7 @@ bash bin/check-release.sh
 
 The script copies only the explicit production allowlist into
 `release/studiocount-bookings/` and writes
-`release/studiocount-bookings-1.0.2.zip`.
+`release/studiocount-bookings-1.0.3.zip`.
 
 ## External services
 

@@ -46,7 +46,7 @@ final class StudioCount_Bookings_Plugin {
 
 		array_unshift(
 			$links,
-			'<a href="' . esc_url( admin_url( 'options-general.php?page=studiocount-bookings' ) ) . '">' . esc_html__( 'Settings', 'studiocount-bookings' ) . '</a>'
+				'<a href="' . esc_url( admin_url( 'admin.php?page=studiocount-bookings' ) ) . '">' . esc_html__( 'Settings', 'studiocount-bookings' ) . '</a>'
 		);
 		return $links;
 	}
@@ -102,7 +102,7 @@ final class StudioCount_Bookings_Plugin {
 		$context = array(
 			'defaultStudio' => $options['studio_slug'],
 			'defaultView'   => $options['default_view'],
-			'settingsUrl'   => admin_url( 'options-general.php?page=studiocount-bookings' ),
+			'settingsUrl'   => admin_url( 'admin.php?page=studiocount-bookings' ),
 			'previewBase'   => StudioCount_Bookings_Renderer::service_origin() . '/embed/',
 		);
 
