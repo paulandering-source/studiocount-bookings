@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 final class StudioCount_Bookings_Renderer {
 	const OPTION_NAME = 'studiocount_bookings_options';
+	const CONNECTION_OPTION_NAME = 'studiocount_bookings_connection';
 
 	/**
 	 * Returns the fixed StudioCount public-service origin.
@@ -30,12 +31,22 @@ final class StudioCount_Bookings_Renderer {
 	 * @return array{studio_slug:string,connection_key:string,default_view:string}
 	 */
 	public static function get_options() {
-		$saved = get_option( self::OPTION_NAME, array() );
-		$saved = is_array( $saved ) ? $saved : array();
+		$saved      = get_option( self::OPTION_NAME, array() );
+		$saved      = is_array( $saved ) ? $saved : array();
+		$connection = get_option( self::CONNECTION_OPTION_NAME, array() );
+		$connection = is_array( $connection ) ? $connection : array();
+
+		$studio = self::normalize_studio( $connection['studio_slug'] ?? '' );
+		$key    = self::normalize_connection_key( $connection['connection_key'] ?? '' );
+		if ( '' === $studio || '' === $key ) {
+			// Preserve connections saved by releases before the authority option was separated.
+			$studio = self::normalize_studio( $saved['studio_slug'] ?? '' );
+			$key    = self::normalize_connection_key( $saved['connection_key'] ?? '' );
+		}
 
 		return array(
-			'studio_slug'   => self::normalize_studio( $saved['studio_slug'] ?? '' ),
-			'connection_key' => self::normalize_connection_key( $saved['connection_key'] ?? '' ),
+			'studio_slug'   => $studio,
+			'connection_key' => $key,
 			'default_view'  => self::normalize_view( $saved['default_view'] ?? 'both' ),
 		);
 	}

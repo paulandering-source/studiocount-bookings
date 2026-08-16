@@ -3,7 +3,7 @@ Tags: class booking, fitness, studio, scheduling, memberships
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.6
+Stable tag: 1.0.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -89,6 +89,11 @@ No. Visitors can reload the WordPress page, and a retry button appears only if b
 
 == Changelog ==
 
+= 1.0.7 =
+
+* Preserve the authenticated studio connection separately from ordinary display settings.
+* Show a successful connection only after WordPress confirms that the connection was saved.
+
 = 1.0.6 =
 
 * Add one-click creation of an editable draft booking page without forced promotional copy.
@@ -124,6 +129,10 @@ No. Visitors can reload the WordPress page, and a retry button appears only if b
 * Responsive isolated embed with exact-origin resizing and Checkout navigation.
 
 == Upgrade Notice ==
+
+= 1.0.7 =
+
+Reconnect once after updating so WordPress can retain the authenticated studio connection.
 
 = 1.0.6 =
 

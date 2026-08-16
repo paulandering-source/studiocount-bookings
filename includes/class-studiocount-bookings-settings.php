@@ -138,16 +138,27 @@ final class StudioCount_Bookings_Settings {
 			);
 		}
 
-		$current = StudioCount_Bookings_Renderer::get_options();
 		update_option(
-			StudioCount_Bookings_Renderer::OPTION_NAME,
+			StudioCount_Bookings_Renderer::CONNECTION_OPTION_NAME,
 			array(
 				'studio_slug'   => $studio,
 				'connection_key' => $key,
-				'default_view'  => $current['default_view'],
 			),
 			false
 		);
+
+		$stored = get_option( StudioCount_Bookings_Renderer::CONNECTION_OPTION_NAME, array() );
+		$stored = is_array( $stored ) ? $stored : array();
+		if (
+			$studio !== StudioCount_Bookings_Renderer::normalize_studio( $stored['studio_slug'] ?? '' ) ||
+			$key !== StudioCount_Bookings_Renderer::normalize_connection_key( $stored['connection_key'] ?? '' )
+		) {
+			wp_die(
+				esc_html__( 'The WordPress connection could not be saved. Return to StudioCount Bookings and try again.', 'studiocount-bookings' ),
+				'',
+				array( 'response' => 500 )
+			);
+		}
 
 		wp_safe_redirect( admin_url( 'admin.php?page=studiocount-bookings&connected=1' ) );
 		exit;
@@ -342,7 +353,7 @@ final class StudioCount_Bookings_Settings {
 			</header>
 
 			<?php settings_errors( StudioCount_Bookings_Renderer::OPTION_NAME ); ?>
-			<?php if ( isset( $_GET['connected'] ) && '1' === sanitize_text_field( wp_unslash( $_GET['connected'] ) ) ) : ?>
+			<?php if ( $connected && isset( $_GET['connected'] ) && '1' === sanitize_text_field( wp_unslash( $_GET['connected'] ) ) ) : ?>
 				<div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'WordPress is connected to the selected StudioCount booking page.', 'studiocount-bookings' ); ?></p></div>
 			<?php endif; ?>
 			<form action="options.php" method="post" class="studiocount-bookings-admin__card">

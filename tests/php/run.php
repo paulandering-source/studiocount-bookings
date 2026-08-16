@@ -8,6 +8,7 @@
 define( 'ABSPATH', __DIR__ . '/' );
 
 $GLOBALS['scb_options'] = array();
+$GLOBALS['scb_connection'] = array();
 $GLOBALS['scb_home']    = 'https://fitness.example/';
 $GLOBALS['scb_admin']   = false;
 $GLOBALS['scb_counter'] = 0;
@@ -18,7 +19,13 @@ function wp_parse_url( $value ) {
 }
 
 function get_option( $name, $default = false ) {
-	return 'studiocount_bookings_options' === $name ? $GLOBALS['scb_options'] : $default;
+	if ( 'studiocount_bookings_options' === $name ) {
+		return $GLOBALS['scb_options'];
+	}
+	if ( 'studiocount_bookings_connection' === $name ) {
+		return $GLOBALS['scb_connection'];
+	}
+	return $default;
 }
 
 function home_url() {
@@ -156,6 +163,13 @@ assert_true( false === strpos( $first, 'studiocount-bookings-2' ), 'first render
 assert_true( false !== strpos( $second, 'studiocount-bookings-2' ), 'second render has independent instance' );
 assert_true( in_array( 'studiocount-bookings-frontend', $GLOBALS['scb_enqueued'], true ), 'enqueues only local frontend handle' );
 
+$separate_key = 'wpc_' . str_repeat( 'b', 64 );
+$GLOBALS['scb_connection'] = array( 'studio_slug' => 'connected-studio', 'connection_key' => $separate_key );
+$separate_options = StudioCount_Bookings_Renderer::get_options();
+assert_same( 'connected-studio', $separate_options['studio_slug'], 'prefers separately stored connection authority' );
+assert_same( $separate_key, $separate_options['connection_key'], 'retains separately stored connection key' );
+$GLOBALS['scb_connection'] = array();
+
 $legacy_override = StudioCount_Bookings_Renderer::render_shortcode( array( 'studio' => 'another-studio' ) );
 assert_true( false !== strpos( $legacy_override, '/embed/studioone' ), 'uses only the authenticated connected studio' );
 assert_true( false === strpos( $legacy_override, '/embed/another-studio' ), 'does not let a shortcode retarget the connection' );
@@ -192,6 +206,8 @@ assert_true( false !== strpos( $settings_source, 'Check booking page' ), 'uses a
 assert_true( false !== strpos( $settings_source, 'View booking page' ), 'links to the full public booking page' );
 assert_true( false !== strpos( $settings_source, 'admin_post_studiocount_bookings_connect' ), 'registers the protected WordPress callback' );
 assert_true( false !== strpos( $settings_source, 'wp_verify_nonce' ), 'binds the callback to the initiating WordPress administrator' );
+assert_true( false !== strpos( $settings_source, 'StudioCount_Bookings_Renderer::CONNECTION_OPTION_NAME' ), 'stores callback authority outside the display setting sanitizer' );
+assert_true( false !== strpos( $settings_source, 'The WordPress connection could not be saved.' ), 'does not report success until the connection is retained' );
 assert_true( false !== strpos( $settings_source, 'admin_post_studiocount_bookings_create_page' ), 'registers the protected booking-page creator' );
 assert_true( false !== strpos( $settings_source, "current_user_can( 'manage_options' )" ), 'requires WordPress administrator authority for page creation' );
 assert_true( false !== strpos( $settings_source, "check_admin_referer( 'studiocount_bookings_create_page' )" ), 'requires an exact page-creation nonce' );
