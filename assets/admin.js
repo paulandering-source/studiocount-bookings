@@ -3,11 +3,10 @@
 
 	function init() {
 		var button = document.getElementById( 'studiocount-bookings-check' );
-		var input = document.getElementById( 'studiocount-bookings-studio' );
 		var result = document.getElementById( 'studiocount-bookings-check-result' );
 		var config = window.StudioCountBookingsAdmin || {};
 
-		if ( ! button || ! input || ! result || ! config.ajaxUrl || ! config.nonce ) {
+		if ( ! button || ! result || ! config.ajaxUrl || ! config.nonce ) {
 			return;
 		}
 
@@ -16,8 +15,6 @@
 			var body = new FormData();
 			body.append( 'action', 'studiocount_bookings_check_connection' );
 			body.append( 'nonce', config.nonce );
-			body.append( 'studio', input.value );
-
 			button.disabled = true;
 			button.textContent = config.checking || 'Checking…';
 			result.className = 'studiocount-bookings-admin__result';

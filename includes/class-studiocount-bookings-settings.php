@@ -23,6 +23,7 @@ final class StudioCount_Bookings_Settings {
 		add_action( 'admin_init', array( __CLASS__, 'register_setting' ) );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_assets' ) );
 		add_action( 'wp_ajax_studiocount_bookings_check_connection', array( __CLASS__, 'check_connection' ) );
+		add_action( 'admin_post_studiocount_bookings_connect', array( __CLASS__, 'complete_connection' ) );
 	}
 
 	/**
@@ -43,7 +44,7 @@ final class StudioCount_Bookings_Settings {
 	}
 
 	/**
-	 * Registers the one plugin option.
+	 * Registers the bounded plugin options.
 	 *
 	 * @return void
 	 */
@@ -55,39 +56,100 @@ final class StudioCount_Bookings_Settings {
 				'type'              => 'array',
 				'sanitize_callback' => array( __CLASS__, 'sanitize' ),
 				'default'           => array(
-					'studio_slug'  => '',
-					'default_view' => 'both',
+					'studio_slug'   => '',
+					'connection_key' => '',
+					'default_view'  => 'both',
 				),
 			)
 		);
 	}
 
 	/**
-	 * Validates settings without silently changing an invalid studio.
+	 * Validates display settings without accepting connection authority here.
 	 *
 	 * @param mixed $input Submitted option value.
-	 * @return array{studio_slug:string,default_view:string}
+	 * @return array{studio_slug:string,connection_key:string,default_view:string}
 	 */
 	public static function sanitize( $input ) {
 		$input   = is_array( $input ) ? $input : array();
 		$current = StudioCount_Bookings_Renderer::get_options();
-		$raw     = trim( (string) ( $input['studio_slug'] ?? '' ) );
-		$studio  = StudioCount_Bookings_Renderer::normalize_studio( $raw );
 		$view    = StudioCount_Bookings_Renderer::normalize_view( $input['default_view'] ?? 'both' );
 
-		if ( '' !== $raw && '' === $studio ) {
-			add_settings_error(
-				StudioCount_Bookings_Renderer::OPTION_NAME,
-				'studiocount_bookings_invalid_studio',
-				__( 'Enter a StudioCount booking URL or studio slug, such as studioone.', 'studiocount-bookings' )
+		return array(
+			'studio_slug'   => $current['studio_slug'],
+			'connection_key' => $current['connection_key'],
+			'default_view'  => $view,
+		);
+	}
+
+	/**
+	 * Builds the authenticated Studio Portal connection URL.
+	 *
+	 * @return string
+	 */
+	public static function connect_url() {
+		return add_query_arg(
+			array(
+				'site_origin' => StudioCount_Bookings_Renderer::parent_origin(),
+				'return_url'  => admin_url( 'admin-post.php?action=studiocount_bookings_connect' ),
+				'state'       => wp_create_nonce( 'studiocount_bookings_connect' ),
+			),
+			StudioCount_Bookings_Renderer::service_origin() . '/studio/wordpress-connect'
+		);
+	}
+
+	/**
+	 * Stores only a valid Studio Portal connection callback.
+	 *
+	 * @return void
+	 */
+	public static function complete_connection() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die(
+				esc_html__( 'You are not allowed to connect this website.', 'studiocount-bookings' ),
+				'',
+				array( 'response' => 403 )
 			);
-			$studio = $current['studio_slug'];
 		}
 
-		return array(
-			'studio_slug'  => $studio,
-			'default_view' => $view,
+		$state = isset( $_GET['state'] )
+			? sanitize_text_field( wp_unslash( $_GET['state'] ) )
+			: '';
+		if ( ! wp_verify_nonce( $state, 'studiocount_bookings_connect' ) ) {
+			wp_die(
+				esc_html__( 'This connection request has expired. Return to StudioCount Bookings and try again.', 'studiocount-bookings' ),
+				'',
+				array( 'response' => 403 )
+			);
+		}
+
+		$studio = isset( $_GET['studio_slug'] )
+			? StudioCount_Bookings_Renderer::normalize_studio( sanitize_text_field( wp_unslash( $_GET['studio_slug'] ) ) )
+			: '';
+		$key = isset( $_GET['connection_key'] )
+			? StudioCount_Bookings_Renderer::normalize_connection_key( sanitize_text_field( wp_unslash( $_GET['connection_key'] ) ) )
+			: '';
+		if ( '' === $studio || '' === $key ) {
+			wp_die(
+				esc_html__( 'StudioCount returned an invalid connection.', 'studiocount-bookings' ),
+				'',
+				array( 'response' => 400 )
+			);
+		}
+
+		$current = StudioCount_Bookings_Renderer::get_options();
+		update_option(
+			StudioCount_Bookings_Renderer::OPTION_NAME,
+			array(
+				'studio_slug'   => $studio,
+				'connection_key' => $key,
+				'default_view'  => $current['default_view'],
+			),
+			false
 		);
+
+		wp_safe_redirect( admin_url( 'admin.php?page=studiocount-bookings&connected=1' ) );
+		exit;
 	}
 
 	/**
@@ -127,7 +189,7 @@ final class StudioCount_Bookings_Settings {
 	}
 
 	/**
-	 * Performs an administrator-requested service reachability check.
+	 * Performs an administrator-requested booking-page authorization check.
 	 *
 	 * @return void
 	 */
@@ -137,22 +199,26 @@ final class StudioCount_Bookings_Settings {
 			wp_send_json_error( array( 'message' => __( 'You are not allowed to check this connection.', 'studiocount-bookings' ) ), 403 );
 		}
 
-		$studio_input = isset( $_POST['studio'] )
-			? sanitize_text_field( wp_unslash( $_POST['studio'] ) )
-			: '';
-		$studio       = StudioCount_Bookings_Renderer::normalize_studio( $studio_input );
-		if ( '' === $studio ) {
-			wp_send_json_error( array( 'message' => __( 'Enter a valid StudioCount booking URL or studio slug first.', 'studiocount-bookings' ) ), 400 );
+		$options = StudioCount_Bookings_Renderer::get_options();
+		if ( '' === $options['studio_slug'] || '' === $options['connection_key'] ) {
+			wp_send_json_error( array( 'message' => __( 'Connect this website to StudioCount first.', 'studiocount-bookings' ) ), 400 );
 		}
 
-		$url      = StudioCount_Bookings_Renderer::service_origin() . '/embed/' . rawurlencode( $studio ) . '?view=both';
-		$response = wp_safe_remote_get(
-			$url,
+		$response = wp_safe_remote_post(
+			'https://qjpftwpnlewwqlodyeff.supabase.co/functions/v1/validate-wordpress-embed-connection',
 			array(
 				'timeout'             => 10,
 				'redirection'         => 0,
-				'limit_response_size' => 32768,
+				'limit_response_size' => 2048,
 				'user-agent'          => 'StudioCount Bookings/' . STUDIOCOUNT_BOOKINGS_VERSION . '; ' . home_url( '/' ),
+				'headers'             => array( 'Content-Type' => 'application/json' ),
+				'body'                => wp_json_encode(
+					array(
+						'studio_slug'   => $options['studio_slug'],
+						'site_origin'   => StudioCount_Bookings_Renderer::parent_origin(),
+						'connection_key' => $options['connection_key'],
+					)
+				),
 			)
 		);
 
@@ -161,15 +227,14 @@ final class StudioCount_Bookings_Settings {
 		}
 
 		$status = (int) wp_remote_retrieve_response_code( $response );
-		$body   = (string) wp_remote_retrieve_body( $response );
-		if ( 200 !== $status || false === strpos( $body, '/assets/index-' ) ) {
-			wp_send_json_error( array( 'message' => __( 'StudioCount returned an unexpected response. Try again shortly.', 'studiocount-bookings' ) ), 502 );
+		$body   = json_decode( (string) wp_remote_retrieve_body( $response ), true );
+		if ( 200 !== $status || array( 'authorized' => true ) !== $body ) {
+			wp_send_json_error( array( 'message' => __( 'This website is not authorised for the selected StudioCount booking page. Connect it again.', 'studiocount-bookings' ) ), 403 );
 		}
 
 		wp_send_json_success(
 			array(
-				'message' => __( 'StudioCount is reachable. Open the preview to confirm this studio page.', 'studiocount-bookings' ),
-				'preview' => $url,
+				'message' => __( 'Booking page found and ready to use on this website.', 'studiocount-bookings' ),
 			)
 		);
 	}
@@ -185,8 +250,9 @@ final class StudioCount_Bookings_Settings {
 		}
 
 		$options     = StudioCount_Bookings_Renderer::get_options();
-		$preview_url = '' !== $options['studio_slug']
-			? StudioCount_Bookings_Renderer::service_origin() . '/embed/' . rawurlencode( $options['studio_slug'] ) . '?view=' . rawurlencode( $options['default_view'] )
+		$connected   = '' !== $options['studio_slug'] && '' !== $options['connection_key'];
+		$booking_url = $connected
+			? StudioCount_Bookings_Renderer::service_origin() . '/book/' . rawurlencode( $options['studio_slug'] )
 			: '';
 		?>
 		<div class="wrap studiocount-bookings-admin">
@@ -197,20 +263,19 @@ final class StudioCount_Bookings_Settings {
 			</header>
 
 			<?php settings_errors( StudioCount_Bookings_Renderer::OPTION_NAME ); ?>
+			<?php if ( isset( $_GET['connected'] ) && '1' === sanitize_text_field( wp_unslash( $_GET['connected'] ) ) ) : ?>
+				<div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'WordPress is connected to the selected StudioCount booking page.', 'studiocount-bookings' ); ?></p></div>
+			<?php endif; ?>
 			<form action="options.php" method="post" class="studiocount-bookings-admin__card">
 				<?php settings_fields( 'studiocount_bookings' ); ?>
 				<div class="studiocount-bookings-admin__field">
-					<label for="studiocount-bookings-studio"><?php esc_html_e( 'Studio booking page', 'studiocount-bookings' ); ?></label>
-					<input
-						id="studiocount-bookings-studio"
-						name="<?php echo esc_attr( StudioCount_Bookings_Renderer::OPTION_NAME ); ?>[studio_slug]"
-						type="text"
-						class="regular-text"
-						value="<?php echo esc_attr( $options['studio_slug'] ); ?>"
-						placeholder="https://www.studiocount.com/book/studioone"
-						autocomplete="off"
-					/>
-					<p class="description"><?php esc_html_e( 'Paste your public StudioCount booking URL or enter its studio slug.', 'studiocount-bookings' ); ?></p>
+					<label><?php esc_html_e( 'Studio booking page', 'studiocount-bookings' ); ?></label>
+					<?php if ( $connected ) : ?>
+						<p><strong><?php echo esc_html( $booking_url ); ?></strong></p>
+						<p class="description"><?php echo esc_html( StudioCount_Bookings_Renderer::parent_origin() ); ?></p>
+					<?php else : ?>
+						<p class="description"><?php esc_html_e( 'Choose a studio in Studio Portal and confirm this WordPress website.', 'studiocount-bookings' ); ?></p>
+					<?php endif; ?>
 				</div>
 
 				<div class="studiocount-bookings-admin__field">
@@ -224,9 +289,10 @@ final class StudioCount_Bookings_Settings {
 
 				<div class="studiocount-bookings-admin__actions">
 					<?php submit_button( __( 'Save settings', 'studiocount-bookings' ), 'primary', 'submit', false ); ?>
-					<button type="button" class="button" id="studiocount-bookings-check"><?php esc_html_e( 'Check connection', 'studiocount-bookings' ); ?></button>
-					<?php if ( $preview_url ) : ?>
-						<a class="button" href="<?php echo esc_url( $preview_url ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Open preview', 'studiocount-bookings' ); ?></a>
+					<a class="button" href="<?php echo esc_url( self::connect_url() ); ?>"><?php echo esc_html( $connected ? __( 'Connect a different studio', 'studiocount-bookings' ) : __( 'Connect to StudioCount', 'studiocount-bookings' ) ); ?></a>
+					<?php if ( $connected ) : ?>
+						<button type="button" class="button" id="studiocount-bookings-check"><?php esc_html_e( 'Check booking page', 'studiocount-bookings' ); ?></button>
+						<a class="button" href="<?php echo esc_url( $booking_url ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'View booking page', 'studiocount-bookings' ); ?></a>
 					<?php endif; ?>
 				</div>
 				<p id="studiocount-bookings-check-result" class="studiocount-bookings-admin__result" role="status" aria-live="polite"></p>

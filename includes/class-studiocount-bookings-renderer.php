@@ -27,16 +27,28 @@ final class StudioCount_Bookings_Renderer {
 	/**
 	 * Returns canonical saved options.
 	 *
-	 * @return array{studio_slug:string,default_view:string}
+	 * @return array{studio_slug:string,connection_key:string,default_view:string}
 	 */
 	public static function get_options() {
 		$saved = get_option( self::OPTION_NAME, array() );
 		$saved = is_array( $saved ) ? $saved : array();
 
 		return array(
-			'studio_slug'  => self::normalize_studio( $saved['studio_slug'] ?? '' ),
-			'default_view' => self::normalize_view( $saved['default_view'] ?? 'both' ),
+			'studio_slug'   => self::normalize_studio( $saved['studio_slug'] ?? '' ),
+			'connection_key' => self::normalize_connection_key( $saved['connection_key'] ?? '' ),
+			'default_view'  => self::normalize_view( $saved['default_view'] ?? 'both' ),
 		);
+	}
+
+	/**
+	 * Normalizes a domain-bound public embed identifier.
+	 *
+	 * @param mixed $value Candidate identifier.
+	 * @return string Empty when invalid.
+	 */
+	public static function normalize_connection_key( $value ) {
+		$value = trim( (string) $value );
+		return 1 === preg_match( '/^wpc_[a-f0-9]{64}$/', $value ) ? $value : '';
 	}
 
 	/**
@@ -121,15 +133,17 @@ final class StudioCount_Bookings_Renderer {
 	 *
 	 * @param string $studio      Canonical public studio slug.
 	 * @param string $view        Canonical display mode.
-	 * @param string $instance_id Unique frame instance.
+	 * @param string $instance_id   Unique frame instance.
+	 * @param string $connection_key Domain-bound public embed identifier.
 	 * @return string
 	 */
-	public static function embed_url( $studio, $view, $instance_id ) {
+	public static function embed_url( $studio, $view, $instance_id, $connection_key ) {
 		return add_query_arg(
 			array(
 				'view'          => self::normalize_view( $view ),
 				'parent_origin' => self::parent_origin(),
 				'instance_id'   => $instance_id,
+				'connection_key' => self::normalize_connection_key( $connection_key ),
 			),
 			self::service_origin() . '/embed/' . rawurlencode( $studio )
 		);
@@ -171,25 +185,18 @@ final class StudioCount_Bookings_Renderer {
 	 * @return string
 	 */
 	private static function render( $attributes, $is_block ) {
-		$options    = self::get_options();
-		$raw_studio = trim( (string) ( $attributes['studio'] ?? '' ) );
-		$studio     = self::normalize_studio( $raw_studio );
-		if ( '' !== $raw_studio && '' === $studio ) {
-			return self::configuration_message( $is_block );
-		}
-		if ( '' === $studio ) {
-			$studio = $options['studio_slug'];
-		}
+		$options = self::get_options();
+		$studio  = $options['studio_slug'];
 		$view = '' !== trim( (string) ( $attributes['view'] ?? '' ) )
 			? self::normalize_view( $attributes['view'] )
 			: $options['default_view'];
 
-		if ( '' === $studio || '' === self::parent_origin() ) {
+		if ( '' === $studio || '' === $options['connection_key'] || '' === self::parent_origin() ) {
 			return self::configuration_message( $is_block );
 		}
 
 		$instance_id = substr( wp_unique_id( 'studiocount-bookings-' ), 0, 80 );
-		$embed_url   = self::embed_url( $studio, $view, $instance_id );
+		$embed_url   = self::embed_url( $studio, $view, $instance_id, $options['connection_key'] );
 		$booking_url = self::service_origin() . '/book/' . rawurlencode( $studio );
 		$classes     = 'studiocount-bookings';
 		if ( $is_block && function_exists( 'get_block_wrapper_attributes' ) ) {

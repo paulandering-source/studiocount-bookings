@@ -101,6 +101,7 @@ final class StudioCount_Bookings_Plugin {
 		$options = StudioCount_Bookings_Renderer::get_options();
 		$context = array(
 			'defaultStudio' => $options['studio_slug'],
+			'connected'     => '' !== $options['connection_key'],
 			'defaultView'   => $options['default_view'],
 			'settingsUrl'   => admin_url( 'admin.php?page=studiocount-bookings' ),
 			'previewBase'   => StudioCount_Bookings_Renderer::service_origin() . '/embed/',

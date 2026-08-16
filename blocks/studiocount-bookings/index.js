@@ -7,7 +7,6 @@
 	var useBlockProps = blockEditor.useBlockProps;
 	var PanelBody = components.PanelBody;
 	var SelectControl = components.SelectControl;
-	var TextControl = components.TextControl;
 	var Notice = components.Notice;
 	var __ = i18n.__;
 
@@ -15,7 +14,8 @@
 		edit: function ( props ) {
 			var attributes = props.attributes;
 			var context = window.StudioCountBookingsEditor || {};
-			var studio = String( attributes.studio || context.defaultStudio || '' ).trim();
+			var studio = String( context.defaultStudio || '' ).trim();
+			var connected = true === context.connected;
 			var view = attributes.view || context.defaultView || 'both';
 			var viewLabel = {
 				classes: __( 'Classes', 'studiocount-bookings' ),
@@ -33,14 +33,6 @@
 					el(
 						PanelBody,
 						{ title: __( 'StudioCount Bookings', 'studiocount-bookings' ), initialOpen: true },
-						el( TextControl, {
-							label: __( 'Studio booking URL or slug', 'studiocount-bookings' ),
-							value: attributes.studio || '',
-							help: __( 'Leave blank to use the saved default.', 'studiocount-bookings' ),
-							onChange: function ( value ) {
-								props.setAttributes( { studio: value } );
-							}
-						} ),
 						el( SelectControl, {
 							label: __( 'Display', 'studiocount-bookings' ),
 							value: attributes.view || '',
@@ -61,7 +53,7 @@
 					blockProps,
 					el( 'p', { className: 'studiocount-bookings-editor__eyebrow' }, 'StudioCount' ),
 					el( 'h3', {}, __( 'StudioCount Bookings', 'studiocount-bookings' ) ),
-					studio
+					studio && connected
 						? el(
 							'div',
 							{ className: 'studiocount-bookings-editor__preview' },
@@ -72,7 +64,7 @@
 						: el(
 							Notice,
 							{ status: 'warning', isDismissible: false },
-							__( 'Choose a studio in the block settings or StudioCount Bookings settings.', 'studiocount-bookings' )
+							__( 'Connect this website in StudioCount Bookings settings.', 'studiocount-bookings' )
 						)
 				)
 			);

@@ -127,17 +127,22 @@ assert_same( 'classes', StudioCount_Bookings_Renderer::normalize_view( 'classes'
 assert_same( 'products', StudioCount_Bookings_Renderer::normalize_view( 'products' ), 'accepts products view' );
 assert_same( 'both', StudioCount_Bookings_Renderer::normalize_view( 'unexpected' ), 'defaults unknown view' );
 
+$connection_key = 'wpc_' . str_repeat( 'a', 64 );
+assert_same( $connection_key, StudioCount_Bookings_Renderer::normalize_connection_key( $connection_key ), 'accepts exact connection key' );
+assert_same( '', StudioCount_Bookings_Renderer::normalize_connection_key( 'wpc_' . str_repeat( 'A', 64 ) ), 'rejects wrong-case connection key' );
+
 $GLOBALS['scb_home'] = 'http://localhost:8080/path';
 assert_same( 'http://localhost:8080', StudioCount_Bookings_Renderer::parent_origin(), 'preserves local origin and port' );
 $GLOBALS['scb_home'] = 'https://fitness.example/';
 
-$url = StudioCount_Bookings_Renderer::embed_url( 'studioone', 'classes', 'studiocount-bookings-1' );
+$url = StudioCount_Bookings_Renderer::embed_url( 'studioone', 'classes', 'studiocount-bookings-1', $connection_key );
 assert_true( 0 === strpos( $url, 'https://www.studiocount.com/embed/studioone?' ), 'uses exact service embed route' );
 assert_true( false !== strpos( $url, 'view=classes' ), 'binds exact view' );
 assert_true( false !== strpos( $url, 'parent_origin=https%3A%2F%2Ffitness.example' ), 'binds parent origin' );
 assert_true( false !== strpos( $url, 'instance_id=studiocount-bookings-1' ), 'binds frame instance' );
+assert_true( false !== strpos( $url, 'connection_key=wpc_' ), 'binds domain connection identifier' );
 
-$GLOBALS['scb_options'] = array( 'studio_slug' => 'studioone', 'default_view' => 'both' );
+$GLOBALS['scb_options'] = array( 'studio_slug' => 'studioone', 'connection_key' => $connection_key, 'default_view' => 'both' );
 $first = StudioCount_Bookings_Renderer::render_shortcode();
 $second = StudioCount_Bookings_Renderer::render_shortcode( array( 'view' => 'products' ) );
 assert_true( false !== strpos( $first, 'Loading bookings' ), 'uses neutral visitor loading copy' );
@@ -151,9 +156,9 @@ assert_true( false === strpos( $first, 'studiocount-bookings-2' ), 'first render
 assert_true( false !== strpos( $second, 'studiocount-bookings-2' ), 'second render has independent instance' );
 assert_true( in_array( 'studiocount-bookings-frontend', $GLOBALS['scb_enqueued'], true ), 'enqueues only local frontend handle' );
 
-$invalid_override = StudioCount_Bookings_Renderer::render_shortcode( array( 'studio' => 'invalid_slug' ) );
-assert_true( false !== strpos( $invalid_override, 'not available right now' ), 'fails closed on an explicit invalid studio override' );
-assert_true( false === strpos( $invalid_override, '/embed/studioone' ), 'does not silently substitute the saved studio' );
+$legacy_override = StudioCount_Bookings_Renderer::render_shortcode( array( 'studio' => 'another-studio' ) );
+assert_true( false !== strpos( $legacy_override, '/embed/studioone' ), 'uses only the authenticated connected studio' );
+assert_true( false === strpos( $legacy_override, '/embed/another-studio' ), 'does not let a shortcode retarget the connection' );
 
 $GLOBALS['scb_options'] = array();
 $GLOBALS['scb_admin'] = false;
@@ -182,6 +187,11 @@ assert_true( false !== strpos( $plugin_source, "admin.php?page=studiocount-booki
 $settings_source = file_get_contents( dirname( __DIR__, 2 ) . '/includes/class-studiocount-bookings-settings.php' );
 assert_true( false !== strpos( $settings_source, 'add_menu_page(' ), 'registers a visible top-level WordPress admin menu' );
 assert_true( false !== strpos( $settings_source, "'dashicons-calendar-alt'" ), 'uses a recognizable booking calendar menu icon' );
+assert_true( false !== strpos( $settings_source, 'Connect to StudioCount' ), 'starts connection through authenticated Studio Portal' );
+assert_true( false !== strpos( $settings_source, 'Check booking page' ), 'uses an unambiguous booking-page check label' );
+assert_true( false !== strpos( $settings_source, 'View booking page' ), 'links to the full public booking page' );
+assert_true( false !== strpos( $settings_source, 'admin_post_studiocount_bookings_connect' ), 'registers the protected WordPress callback' );
+assert_true( false !== strpos( $settings_source, 'wp_verify_nonce' ), 'binds the callback to the initiating WordPress administrator' );
 
 $block = json_decode( file_get_contents( dirname( __DIR__, 2 ) . '/blocks/studiocount-bookings/block.json' ), true );
 assert_same( 'studiocount/bookings', $block['name'] ?? '', 'registers exact block namespace' );
