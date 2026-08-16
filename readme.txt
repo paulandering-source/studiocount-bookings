@@ -3,7 +3,7 @@ Tags: class booking, fitness, studio, scheduling, memberships
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -87,6 +87,11 @@ No. Class availability refresh is manual or follows a relevant visitor action, s
 
 == Changelog ==
 
+= 1.0.1 =
+
+* Use a wider responsive booking canvas even inside narrow theme content columns.
+* Leave the page heading and introductory copy to the WordPress site.
+
 = 1.0.0 =
 
 * Initial public release with Gutenberg block and shortcode support.
@@ -94,6 +99,10 @@ No. Class availability refresh is manual or follows a relevant visitor action, s
 * Responsive isolated embed with exact-origin resizing and Checkout navigation.
 
 == Upgrade Notice ==
+
+= 1.0.1 =
+
+Improves the embedded layout and removes the duplicate studio introduction.
 
 = 1.0.0 =
 

@@ -1,18 +1,20 @@
 .studiocount-bookings {
 	box-sizing: border-box;
 	position: relative;
-	width: 100%;
-	max-width: 1200px;
-	margin: 1.5rem auto;
+	left: 50%;
+	width: min(1200px, calc(100vw - 2rem));
+	max-width: none;
+	margin: 1.5rem 0;
+	transform: translateX(-50%);
 	color: #111827;
 }
 
 .studiocount-bookings.alignwide {
-	max-width: 1200px;
+	width: min(1200px, calc(100vw - 2rem));
 }
 
 .studiocount-bookings.alignfull {
-	max-width: none;
+	width: calc(100vw - 2rem);
 }
 
 .studiocount-bookings__frame {
@@ -60,7 +62,13 @@
 
 @media (max-width: 600px) {
 	.studiocount-bookings {
-		margin: 1rem auto;
+		width: calc(100vw - 1rem);
+		margin: 1rem 0;
+	}
+
+	.studiocount-bookings.alignwide,
+	.studiocount-bookings.alignfull {
+		width: calc(100vw - 1rem);
 	}
 
 	.studiocount-bookings__frame {

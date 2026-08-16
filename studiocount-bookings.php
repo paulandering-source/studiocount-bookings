@@ -3,7 +3,7 @@
  * Plugin Name:       StudioCount Bookings
  * Plugin URI:        https://www.studiocount.com/
  * Description:       Add StudioCount classes and products to your WordPress website.
- * Version:           1.0.0
+ * Version:           1.0.1
  * Requires at least: 6.4
  * Requires PHP:      7.4
  * Author:            Sanctabase Ltd
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'STUDIOCOUNT_BOOKINGS_VERSION', '1.0.0' );
+define( 'STUDIOCOUNT_BOOKINGS_VERSION', '1.0.1' );
 define( 'STUDIOCOUNT_BOOKINGS_FILE', __FILE__ );
 define( 'STUDIOCOUNT_BOOKINGS_PATH', plugin_dir_path( __FILE__ ) );
 define( 'STUDIOCOUNT_BOOKINGS_URL', plugin_dir_url( __FILE__ ) );
