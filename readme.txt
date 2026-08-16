@@ -3,7 +3,7 @@ Tags: class booking, fitness, studio, scheduling, memberships
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.7
+Stable tag: 1.0.8
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -27,6 +27,8 @@ The plugin supports multiple embeds on one page and adapts to phone, tablet and 
 
 This plugin requires a StudioCount studio account and connects to the external StudioCount service at `https://www.studiocount.com`.
 
+The studio's StudioCount booking page must remain live while the plugin is in use. The plugin displays the same published classes, availability and products on WordPress; it does not create a separate booking channel.
+
 The WordPress administrator connects the site through the authenticated Studio Portal. StudioCount binds one revocable public display identifier to the exact studio and WordPress origin. Copying the identifier to another website does not authorize the embed, and the identifier grants no Owner, Member, Supabase or Stripe authority.
 
 When a site owner places the block or shortcode on a public page, the visitor's browser requests the connected studio's public classes, availability, class presentation and products from StudioCount.
@@ -47,7 +49,7 @@ Stripe Services Agreement: https://stripe.com/legal/ssa
 2. Open **StudioCount Bookings** in the WordPress admin menu.
 3. Choose **Connect to StudioCount**, sign in to Studio Portal and confirm the exact studio and WordPress website.
 4. Choose the default display and save the settings.
-5. Choose **Create booking page**, add the block to another page, or use `[studiocount_bookings]`.
+5. Choose **Create a WordPress booking page automatically**, add the **StudioCount Bookings** block to another page, or add a Shortcode block containing `[studiocount_bookings]`.
 
 The shortcode accepts an optional `view` attribute:
 
@@ -89,6 +91,12 @@ No. Visitors can reload the WordPress page, and a retry button appears only if b
 
 == Changelog ==
 
+= 1.0.8 =
+
+* Explain that the connected StudioCount booking page must remain live.
+* Clarify the StudioCount booking-page link and automatic WordPress page creation.
+* Add visible block and shortcode instructions to the plugin settings screen.
+
 = 1.0.7 =
 
 * Preserve the authenticated studio connection separately from ordinary display settings.
@@ -129,6 +137,10 @@ No. Visitors can reload the WordPress page, and a retry button appears only if b
 * Responsive isolated embed with exact-origin resizing and Checkout navigation.
 
 == Upgrade Notice ==
+
+= 1.0.8 =
+
+Adds clearer booking-page requirements and manual block or shortcode instructions.
 
 = 1.0.7 =
 

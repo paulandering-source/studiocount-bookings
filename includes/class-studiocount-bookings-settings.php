@@ -323,7 +323,7 @@ final class StudioCount_Bookings_Settings {
 
 		wp_send_json_success(
 			array(
-				'message' => __( 'Booking page found and ready to use on this website.', 'studiocount-bookings' ),
+				'message' => __( 'This WordPress website is securely connected to the selected studio.', 'studiocount-bookings' ),
 			)
 		);
 	}
@@ -366,6 +366,7 @@ final class StudioCount_Bookings_Settings {
 					<?php else : ?>
 						<p class="description"><?php esc_html_e( 'Choose a studio in Studio Portal and confirm this WordPress website.', 'studiocount-bookings' ); ?></p>
 					<?php endif; ?>
+					<p class="description"><?php esc_html_e( 'Keep your StudioCount booking page live while using the plugin. The plugin displays the same published classes, availability and products on WordPress.', 'studiocount-bookings' ); ?></p>
 				</div>
 
 				<div class="studiocount-bookings-admin__field">
@@ -381,8 +382,8 @@ final class StudioCount_Bookings_Settings {
 					<?php submit_button( __( 'Save settings', 'studiocount-bookings' ), 'primary', 'submit', false ); ?>
 					<a class="button" href="<?php echo esc_url( self::connect_url() ); ?>"><?php echo esc_html( $connected ? __( 'Connect a different studio', 'studiocount-bookings' ) : __( 'Connect to StudioCount', 'studiocount-bookings' ) ); ?></a>
 					<?php if ( $connected ) : ?>
-						<button type="button" class="button" id="studiocount-bookings-check"><?php esc_html_e( 'Check booking page', 'studiocount-bookings' ); ?></button>
-						<a class="button" href="<?php echo esc_url( $booking_url ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'View booking page', 'studiocount-bookings' ); ?></a>
+						<button type="button" class="button" id="studiocount-bookings-check"><?php esc_html_e( 'Check connection', 'studiocount-bookings' ); ?></button>
+						<a class="button" href="<?php echo esc_url( $booking_url ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'View your StudioCount booking page', 'studiocount-bookings' ); ?></a>
 					<?php endif; ?>
 				</div>
 				<p id="studiocount-bookings-check-result" class="studiocount-bookings-admin__result" role="status" aria-live="polite"></p>
@@ -398,11 +399,21 @@ final class StudioCount_Bookings_Settings {
 					<form action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post">
 						<input type="hidden" name="action" value="studiocount_bookings_create_page">
 						<?php wp_nonce_field( 'studiocount_bookings_create_page' ); ?>
-						<?php submit_button( __( 'Create booking page', 'studiocount-bookings' ), 'primary', 'submit', false ); ?>
+						<?php submit_button( __( 'Create a WordPress booking page automatically', 'studiocount-bookings' ), 'primary', 'submit', false ); ?>
 					</form>
 				<?php else : ?>
 					<p><?php esc_html_e( 'Connect this website to StudioCount before creating a booking page.', 'studiocount-bookings' ); ?></p>
 				<?php endif; ?>
+			</section>
+
+			<section class="studiocount-bookings-admin__card" aria-labelledby="studiocount-manual-add-heading">
+				<h2 id="studiocount-manual-add-heading"><?php esc_html_e( 'Add to a page manually', 'studiocount-bookings' ); ?></h2>
+				<p><strong><?php esc_html_e( 'Block', 'studiocount-bookings' ); ?></strong></p>
+				<p><?php esc_html_e( 'Open the WordPress page editor, add a block and search for “StudioCount Bookings”.', 'studiocount-bookings' ); ?></p>
+				<p><strong><?php esc_html_e( 'Shortcode', 'studiocount-bookings' ); ?></strong></p>
+				<p><?php esc_html_e( 'Add a Shortcode block and enter:', 'studiocount-bookings' ); ?></p>
+				<p><code>[studiocount_bookings]</code></p>
+				<p class="description"><?php esc_html_e( 'To override the default display, use view="classes", view="products" or view="both".', 'studiocount-bookings' ); ?></p>
 			</section>
 
 			<section class="studiocount-bookings-admin__card studiocount-bookings-admin__service" aria-labelledby="studiocount-service-heading">

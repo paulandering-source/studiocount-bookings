@@ -202,8 +202,9 @@ $settings_source = file_get_contents( dirname( __DIR__, 2 ) . '/includes/class-s
 assert_true( false !== strpos( $settings_source, 'add_menu_page(' ), 'registers a visible top-level WordPress admin menu' );
 assert_true( false !== strpos( $settings_source, "'dashicons-calendar-alt'" ), 'uses a recognizable booking calendar menu icon' );
 assert_true( false !== strpos( $settings_source, 'Connect to StudioCount' ), 'starts connection through authenticated Studio Portal' );
-assert_true( false !== strpos( $settings_source, 'Check booking page' ), 'uses an unambiguous booking-page check label' );
-assert_true( false !== strpos( $settings_source, 'View booking page' ), 'links to the full public booking page' );
+assert_true( false !== strpos( $settings_source, 'Check connection' ), 'labels the exact connection check truthfully' );
+assert_true( false !== strpos( $settings_source, 'View your StudioCount booking page' ), 'links to the full StudioCount booking page' );
+assert_true( false !== strpos( $settings_source, 'Keep your StudioCount booking page live while using the plugin.' ), 'states the live StudioCount booking-page prerequisite' );
 assert_true( false !== strpos( $settings_source, 'admin_post_studiocount_bookings_connect' ), 'registers the protected WordPress callback' );
 assert_true( false !== strpos( $settings_source, 'wp_verify_nonce' ), 'binds the callback to the initiating WordPress administrator' );
 assert_true( false !== strpos( $settings_source, 'StudioCount_Bookings_Renderer::CONNECTION_OPTION_NAME' ), 'stores callback authority outside the display setting sanitizer' );
@@ -214,6 +215,10 @@ assert_true( false !== strpos( $settings_source, "check_admin_referer( 'studioco
 assert_true( false !== strpos( $settings_source, "'post_status'  => 'draft'" ), 'creates an editable draft rather than publishing automatically' );
 assert_true( false !== strpos( $settings_source, '<!-- wp:studiocount/bookings /-->' ), 'creates the page with the local StudioCount block' );
 assert_true( false !== strpos( $settings_source, 'Edit booking page' ), 'reuses the existing plugin-created page instead of duplicating it' );
+assert_true( false !== strpos( $settings_source, 'Create a WordPress booking page automatically' ), 'offers clear automatic page creation' );
+assert_true( false !== strpos( $settings_source, 'Add to a page manually' ), 'shows manual embed instructions in settings' );
+assert_true( false !== strpos( $settings_source, 'search for “StudioCount Bookings”' ), 'explains how to find the block' );
+assert_true( false !== strpos( $settings_source, '[studiocount_bookings]' ), 'shows the exact manual shortcode' );
 
 $block = json_decode( file_get_contents( dirname( __DIR__, 2 ) . '/blocks/studiocount-bookings/block.json' ), true );
 assert_same( 'studiocount/bookings', $block['name'] ?? '', 'registers exact block namespace' );

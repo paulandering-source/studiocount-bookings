@@ -6,7 +6,8 @@ block and shortcode that display a studio's public classes and products.
 
 ## Product boundary
 
-WordPress stores only a public studio slug and a default display mode.
+WordPress stores only the connected public studio slug, a domain-bound public
+connection identifier and a default display mode.
 StudioCount remains authoritative for classes, availability, products, prices,
 bookings, waitlists and payments. The plugin contains no Supabase or Stripe
 credentials and receives no card or customer booking data.
@@ -19,13 +20,15 @@ Checkout path may become top-level navigation destinations.
 
 ## Usage
 
-Save a public StudioCount booking URL or slug under **Settings > StudioCount
-Bookings**, then insert the **StudioCount Bookings** block.
+Open **StudioCount Bookings** in the WordPress admin menu, connect the website
+through Studio Portal and keep the selected StudioCount booking page live. You
+can then create a draft booking page automatically, insert the **StudioCount
+Bookings** block, or add the shortcode manually.
 
 The shortcode equivalent is:
 
 ```text
-[studiocount_bookings studio="studioone" view="both"]
+[studiocount_bookings view="both"]
 ```
 
 Supported view values are `classes`, `products` and `both`.
@@ -53,8 +56,7 @@ bash bin/check-release.sh
 ```
 
 The script copies only the explicit production allowlist into
-`release/studiocount-bookings/` and writes
-`release/studiocount-bookings-1.0.4.zip`.
+`release/studiocount-bookings/` and writes the versioned release ZIP.
 
 ## External services
 
