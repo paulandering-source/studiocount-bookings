@@ -219,6 +219,17 @@ assert_true( false !== strpos( $settings_source, 'Create a WordPress booking pag
 assert_true( false !== strpos( $settings_source, 'Add to a page manually' ), 'shows manual embed instructions in settings' );
 assert_true( false !== strpos( $settings_source, 'search for “StudioCount Bookings”' ), 'explains how to find the block' );
 assert_true( false !== strpos( $settings_source, '[studiocount_bookings]' ), 'shows the exact manual shortcode' );
+assert_true( false !== strpos( $settings_source, 'owner and operator of StudioCount' ), 'identifies the official plugin owner' );
+assert_true( false !== strpos( $settings_source, 'Supabase-hosted validation endpoint' ), 'discloses the hosted validation service in settings' );
+assert_true( false !== strpos( $settings_source, 'https://supabase.com/privacy' ), 'links to the Supabase privacy policy' );
+
+$wordpress_readme = file_get_contents( dirname( __DIR__, 2 ) . '/readme.txt' );
+assert_true( false !== strpos( $wordpress_readme, 'product owned and operated by Sanctabase Ltd' ), 'states official StudioCount ownership in the WordPress readme' );
+assert_true( false !== strpos( $wordpress_readme, 'https://qjpftwpnlewwqlodyeff.supabase.co/functions/v1/validate-wordpress-embed-connection' ), 'names the exact external validation endpoint' );
+assert_true( false !== strpos( $wordpress_readme, 'public connection identifier, studio slug, exact WordPress site origin, WordPress home URL and plugin version' ), 'documents the validation data transfer' );
+assert_true( false !== strpos( $wordpress_readme, 'No check runs automatically.' ), 'documents when validation occurs' );
+assert_true( false !== strpos( $wordpress_readme, 'https://supabase.com/terms' ), 'links to the Supabase terms' );
+assert_true( false !== strpos( $wordpress_readme, 'https://stripe.com/gb/privacy' ), 'links to the Stripe privacy policy' );
 
 $block = json_decode( file_get_contents( dirname( __DIR__, 2 ) . '/blocks/studiocount-bookings/block.json' ), true );
 assert_same( 'studiocount/bookings', $block['name'] ?? '', 'registers exact block namespace' );

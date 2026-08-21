@@ -3,7 +3,7 @@ Tags: class booking, fitness, studio, scheduling, memberships
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.8
+Stable tag: 1.0.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -11,7 +11,7 @@ Add StudioCount classes and products to WordPress with a Gutenberg block or shor
 
 == Description ==
 
-StudioCount Bookings lets studios display their current StudioCount classes and products on an existing WordPress website.
+StudioCount Bookings is the official WordPress plugin for StudioCount, a product owned and operated by Sanctabase Ltd. It lets studios display their current StudioCount classes and products on an existing WordPress website.
 
 Use the StudioCount Bookings block or the `[studiocount_bookings]` shortcode. Each embed can show:
 
@@ -23,7 +23,11 @@ Visitors see current information from StudioCount and continue through the norma
 
 The plugin supports multiple embeds on one page and adapts to phone, tablet and desktop layouts. Visitors can reload the WordPress page whenever they want fresh information; a contextual retry is shown if information fails to load.
 
-= StudioCount service =
+= External services =
+
+This plugin requires the external services described below. It does not send data to them until an administrator connects or checks a StudioCount connection, or a visitor loads or uses an embedded booking page.
+
+= StudioCount and Supabase =
 
 This plugin requires a StudioCount studio account and connects to the external StudioCount service at `https://www.studiocount.com`.
 
@@ -35,13 +39,23 @@ When a site owner places the block or shortcode on a public page, the visitor's 
 
 If a visitor starts a booking, joins a waitlist or chooses a product, the information they enter is sent directly from the hosted StudioCount frame to StudioCount. If the studio offers online payment, the visitor continues to Stripe's hosted Checkout. WordPress does not receive or store the visitor's booking details, StudioCount credentials, card details, Supabase credentials or Stripe credentials.
 
-An administrator-requested booking-page check sends the public connection identifier, studio slug and exact site origin to StudioCount using the WordPress HTTP API. No check runs automatically.
+When a WordPress administrator explicitly chooses **Check connection**, the plugin sends the public connection identifier, studio slug, exact WordPress site origin, WordPress home URL and plugin version to the StudioCount connection-validation endpoint at `https://qjpftwpnlewwqlodyeff.supabase.co/functions/v1/validate-wordpress-embed-connection`. The endpoint is operated by StudioCount and hosted by Supabase. This information is used only to confirm that the identifier is bound to that studio and WordPress origin. No check runs automatically.
 
 StudioCount Terms: https://www.studiocount.com/terms
 
 StudioCount Privacy Policy: https://www.studiocount.com/privacy
 
+Supabase Terms: https://supabase.com/terms
+
+Supabase Privacy Policy: https://supabase.com/privacy
+
+= Stripe =
+
+If a studio offers online payment and a visitor chooses a paid booking or product, StudioCount sends the transaction details required to create a Stripe-hosted Checkout session. The visitor then supplies payment and billing information directly to Stripe. The WordPress plugin and WordPress website do not receive or store card details.
+
 Stripe Services Agreement: https://stripe.com/legal/ssa
+
+Stripe Privacy Policy: https://stripe.com/gb/privacy
 
 == Installation ==
 
@@ -91,6 +105,11 @@ No. Visitors can reload the WordPress page, and a retry button appears only if b
 
 == Changelog ==
 
+= 1.0.9 =
+
+* Identify this as the official StudioCount plugin from Sanctabase Ltd.
+* Document the exact StudioCount connection-validation endpoint, data transfer and applicable external-service policies.
+
 = 1.0.8 =
 
 * Explain that the connected StudioCount booking page must remain live.
@@ -137,6 +156,10 @@ No. Visitors can reload the WordPress page, and a retry button appears only if b
 * Responsive isolated embed with exact-origin resizing and Checkout navigation.
 
 == Upgrade Notice ==
+
+= 1.0.9 =
+
+Adds complete external-service and ownership disclosures for the WordPress.org review.
 
 = 1.0.8 =
 

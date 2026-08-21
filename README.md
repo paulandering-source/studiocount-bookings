@@ -1,8 +1,9 @@
 # StudioCount Bookings
 
 StudioCount Bookings is the official WordPress integration for studios using
-[StudioCount](https://www.studiocount.com/). It provides a dynamic Gutenberg
-block and shortcode that display a studio's public classes and products.
+[StudioCount](https://www.studiocount.com/), a product owned and operated by
+Sanctabase Ltd. It provides a dynamic Gutenberg block and shortcode that
+display a studio's public classes and products.
 
 ## Product boundary
 
@@ -61,10 +62,15 @@ The script copies only the explicit production allowlist into
 ## External services
 
 The complete data-transfer disclosure is maintained in `readme.txt` and on the
-plugin settings screen. StudioCount Terms and Privacy are available at:
+plugin settings screen. It covers StudioCount, the Supabase-hosted connection
+validation endpoint and Stripe-hosted Checkout. The applicable policies are:
 
 - <https://www.studiocount.com/terms>
 - <https://www.studiocount.com/privacy>
+- <https://supabase.com/terms>
+- <https://supabase.com/privacy>
+- <https://stripe.com/legal/ssa>
+- <https://stripe.com/gb/privacy>
 
 ## Licence
 

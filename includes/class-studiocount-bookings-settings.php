@@ -418,11 +418,20 @@ final class StudioCount_Bookings_Settings {
 
 			<section class="studiocount-bookings-admin__card studiocount-bookings-admin__service" aria-labelledby="studiocount-service-heading">
 				<h2 id="studiocount-service-heading"><?php esc_html_e( 'StudioCount service', 'studiocount-bookings' ); ?></h2>
-				<p><?php esc_html_e( 'This plugin displays booking and product information from StudioCount. When the block or shortcode appears on a public page, the visitor’s browser connects directly to StudioCount. Booking and purchase details are then sent directly to StudioCount and, for online payments, Stripe.', 'studiocount-bookings' ); ?></p>
+				<p><?php esc_html_e( 'This official plugin is provided by Sanctabase Ltd, the owner and operator of StudioCount. It displays booking and product information from StudioCount. When the block or shortcode appears on a public page, the visitor’s browser connects directly to StudioCount. Booking and purchase details are then sent directly to StudioCount and, for online payments, Stripe.', 'studiocount-bookings' ); ?></p>
+				<p><?php esc_html_e( 'When an administrator chooses Check connection, the plugin sends the public connection identifier, studio slug, WordPress site origin, home URL and plugin version to StudioCount’s Supabase-hosted validation endpoint. No check runs automatically.', 'studiocount-bookings' ); ?></p>
 				<p>
 					<a href="https://www.studiocount.com/terms" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'StudioCount Terms', 'studiocount-bookings' ); ?></a>
 					<span aria-hidden="true"> · </span>
 					<a href="https://www.studiocount.com/privacy" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'StudioCount Privacy Policy', 'studiocount-bookings' ); ?></a>
+					<span aria-hidden="true"> · </span>
+					<a href="https://supabase.com/terms" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Supabase Terms', 'studiocount-bookings' ); ?></a>
+					<span aria-hidden="true"> · </span>
+					<a href="https://supabase.com/privacy" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Supabase Privacy Policy', 'studiocount-bookings' ); ?></a>
+					<span aria-hidden="true"> · </span>
+					<a href="https://stripe.com/legal/ssa" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Stripe Services Agreement', 'studiocount-bookings' ); ?></a>
+					<span aria-hidden="true"> · </span>
+					<a href="https://stripe.com/gb/privacy" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Stripe Privacy Policy', 'studiocount-bookings' ); ?></a>
 				</p>
 			</section>
 		</div>

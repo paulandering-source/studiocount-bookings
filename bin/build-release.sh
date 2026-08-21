@@ -30,7 +30,7 @@ cp "$repo_dir/blocks/studiocount-bookings/index.js" "$package_dir/blocks/studioc
 cp "$repo_dir/blocks/studiocount-bookings/editor.css" "$package_dir/blocks/studiocount-bookings/"
 cp "$repo_dir/includes/"*.php "$package_dir/includes/"
 
-find "$package_dir" -type f -exec touch -t 202608150000 {} +
+find "$package_dir" -type f -exec touch -t 202608210000 {} +
 rm -f "$zip_path"
 (
 	cd "$release_dir"
